@@ -6,6 +6,9 @@
 
 require("dbconnect.php");
 
+// Use explicit local timezone before any date/time functions are used.
+date_default_timezone_set('Asia/Kolkata');
+
 ######################################################################################################
 ######################################################################################################
 #######   static variable settings for display options

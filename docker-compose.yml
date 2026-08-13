@@ -1,0 +1,32 @@
+services:
+  vicidial-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vicidial-web:local
+    container_name: vicidial-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - vicidial-db
+    environment:
+      VICIDIAL_DB_HOST: vicidial-db
+      VICIDIAL_DB_NAME: asterisk
+      VICIDIAL_DB_USER: cron
+      VICIDIAL_DB_PASS: vicidial
+
+  vicidial-db:
+    image: mariadb:10.5
+    container_name: vicidial-db
+    environment:
+      MARIADB_ROOT_PASSWORD: vicidialroot
+      MARIADB_DATABASE: asterisk
+      MARIADB_USER: cron
+      MARIADB_PASSWORD: vicidial
+    ports:
+      - "3306:3306"
+    volumes:
+      - vicidial_db_data:/var/lib/mysql
+
+volumes:
+  vicidial_db_data:

@@ -1,0 +1,203 @@
+services:
+  vicidial-db:
+    image: mariadb:10.5
+    container_name: vicidial-db-prod
+    restart: always
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_connections=500
+      - --innodb_buffer_pool_size=1G
+    env_file:
+      - .env.production
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${VICIDIAL_DB_NAME}
+      MARIADB_USER: ${VICIDIAL_DB_USER}
+      MARIADB_PASSWORD: ${VICIDIAL_DB_PASS}
+    volumes:
+      - vicidial_db_data_prod:/var/lib/mysql
+      - ./extras/MySQL_AST_CREATE_tables.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro
+      - ./extras/first_server_install.sql:/docker-entrypoint-initdb.d/20-seed.sql:ro
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/90-vicidial.cnf:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+    networks:
+      - core
+
+  vicidial-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vicidial-web:prod
+    container_name: vicidial-web-prod
+    restart: always
+    depends_on:
+      vicidial-db:
+        condition: service_healthy
+    env_file:
+      - .env.production
+    environment:
+      VICIDIAL_SERVER_IP: ${VICIDIAL_SERVER_IP}
+      VICIDIAL_DB_HOST: vicidial-db
+      VICIDIAL_DB_PORT: ${VICIDIAL_DB_PORT}
+      VICIDIAL_DB_NAME: ${VICIDIAL_DB_NAME}
+      VICIDIAL_DB_USER: ${VICIDIAL_DB_USER}
+      VICIDIAL_DB_PASS: ${VICIDIAL_DB_PASS}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1/agc/vicidial.php >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 8s
+      retries: 10
+    networks:
+      - core
+      - edge
+
+  vicidial-daemons:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vicidial-web:prod
+    container_name: vicidial-daemons-prod
+    restart: always
+    depends_on:
+      vicidial-db:
+        condition: service_healthy
+      vicidial-asterisk:
+        condition: service_started
+    env_file:
+      - .env.production
+    command: ["/opt/vicidial/docker/vicidial-daemons/start.sh"]
+    environment:
+      VICIDIAL_SERVER_IP: ${VICIDIAL_SERVER_IP}
+      VICIDIAL_DB_HOST: vicidial-db
+      VICIDIAL_DB_PORT: ${VICIDIAL_DB_PORT}
+      VICIDIAL_DB_NAME: ${VICIDIAL_DB_NAME}
+      VICIDIAL_DB_USER: ${VICIDIAL_DB_USER}
+      VICIDIAL_DB_PASS: ${VICIDIAL_DB_PASS}
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f ADMIN_keepalive_ALL.pl >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 8s
+      retries: 5
+    networks:
+      - core
+
+  vicidial-asterisk:
+    build:
+      context: .
+      dockerfile: docker/asterisk/Dockerfile
+    image: vicidial-asterisk:prod
+    container_name: vicidial-asterisk-prod
+    restart: always
+    env_file:
+      - .env.production
+    environment:
+      VICIDIAL_AMI_USER: ${VICIDIAL_AMI_USER}
+      VICIDIAL_AMI_PASS: ${VICIDIAL_AMI_PASS}
+    ports:
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "10000-10100:10000-10100/udp"
+      - "5038:5038/tcp"
+    volumes:
+      - ./docker/asterisk/etc/extensions.conf:/etc/asterisk/extensions.conf:ro
+      - ./docker/asterisk/etc/sip.conf:/etc/asterisk/sip.conf:ro
+      - ./docker/asterisk/etc/pjsip.conf:/etc/asterisk/pjsip.conf:ro
+    networks:
+      - core
+
+  vicidial-proxy:
+    image: nginx:1.27-alpine
+    container_name: vicidial-proxy-prod
+    restart: always
+    depends_on:
+      vicidial-web:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./secrets/tls:/etc/nginx/tls:ro
+    networks:
+      - edge
+
+  vicidial-db-backup:
+    image: mariadb:10.5
+    container_name: vicidial-db-backup-prod
+    restart: always
+    depends_on:
+      vicidial-db:
+        condition: service_healthy
+    env_file:
+      - .env.production
+    entrypoint: ["/bin/bash", "/backup/backup-loop.sh"]
+    volumes:
+      - vicidial_db_backups_prod:/backups
+      - ./docker/db/backup-loop.sh:/backup/backup-loop.sh:ro
+    networks:
+      - core
+
+  vicidial-bootstrap:
+    image: mariadb:10.5
+    container_name: vicidial-bootstrap-prod
+    restart: "no"
+    depends_on:
+      vicidial-db:
+        condition: service_healthy
+    env_file:
+      - .env.production
+    environment:
+      VICIDIAL_DB_HOST: vicidial-db
+    command: ["/bin/bash", "/bootstrap/vicidial-bootstrap.sh"]
+    volumes:
+      - ./docker/db/vicidial-bootstrap.sh:/bootstrap/vicidial-bootstrap.sh:ro
+    networks:
+      - core
+
+  vicidial-php-control:
+    build:
+      context: ./php-control-api
+      dockerfile: Dockerfile
+    image: vicidial-php-control:prod
+    container_name: vicidial-php-control-prod
+    restart: always
+    depends_on:
+      vicidial-web:
+        condition: service_healthy
+      vicidial-bootstrap:
+        condition: service_completed_successfully
+    env_file:
+      - .env.production
+    environment:
+      APP_API_KEY: ${APP_API_KEY}
+      VICIDIAL_AGC_API_URL: ${VICIDIAL_AGC_API_URL}
+      VICIDIAL_NON_AGENT_API_URL: ${VICIDIAL_NON_AGENT_API_URL}
+      VICIDIAL_API_USER: ${VICIDIAL_API_USER}
+      VICIDIAL_API_PASS: ${VICIDIAL_API_PASS}
+      VICIDIAL_SOURCE: ${VICIDIAL_SOURCE}
+      VICIDIAL_DB_HOST: vicidial-db
+      VICIDIAL_DB_PORT: ${VICIDIAL_DB_PORT}
+      VICIDIAL_DB_NAME: ${VICIDIAL_DB_NAME}
+      VICIDIAL_DB_USER: ${VICIDIAL_DB_USER}
+      VICIDIAL_DB_PASS: ${VICIDIAL_DB_PASS}
+    ports:
+      - "8090:80"
+    volumes:
+      - ./php-control-api/.env.production:/var/www/.env:ro
+    networks:
+      - core
+
+volumes:
+  vicidial_db_data_prod:
+  vicidial_db_backups_prod:
+
+networks:
+  core:
+    driver: bridge
+  edge:
+    driver: bridge

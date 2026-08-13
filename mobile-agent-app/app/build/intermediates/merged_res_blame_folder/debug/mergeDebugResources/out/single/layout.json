@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/nikithgoudpalle/.gradle/daemon/8.7/com.vicidial.simagent.app-mergeDebugResources-35:/layout/activity_main.xml",
+        "source": "/Users/nikithgoudpalle/.gradle/daemon/8.7/com.vicidial.simagent.app-main-38:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-mergeDebugResources-35:/layout/activity_main.xml",
+        "source": "com.vicidial.simagent.app-main-38:/layout/activity_main.xml"
+    }
+]
