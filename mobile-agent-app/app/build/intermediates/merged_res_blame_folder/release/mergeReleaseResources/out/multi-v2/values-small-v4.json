@@ -1,0 +1,43 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.vicidial.simagent.app-mergeReleaseResources-34:/values-small-v4/values-small-v4.xml",
+            "map": [
+                {
+                    "source": "/Users/nikithgoudpalle/.gradle/caches/transforms-4/30dbe09adc47a6fa3161e128d9fbb6b2/transformed/material-1.12.0/res/values-small-v4/values-small-v4.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,128,198,270",
+                        "endColumns": "72,69,71,69",
+                        "endOffsets": "123,193,265,335"
+                    },
+                    "to": {
+                        "startLines": "13,14,15,16",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "555,628,698,770",
+                        "endColumns": "72,69,71,69",
+                        "endOffsets": "623,693,765,835"
+                    }
+                },
+                {
+                    "source": "/Users/nikithgoudpalle/vicidial/vicidial-src/mobile-agent-app/app/src/main/res/values-small/dimens.xml",
+                    "from": {
+                        "startLines": "13,10,11,17,16,3,4,5,9,8,15,18,2,7,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "506,372,413,646,593,101,151,202,330,290,549,691,55,247,461",
+                        "endColumns": "41,40,47,44,52,49,50,43,41,39,43,45,45,42,44",
+                        "endOffsets": "543,408,456,686,641,146,197,241,367,325,588,732,96,285,501"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,17,18,19,20",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,97,138,186,231,284,334,385,429,471,511,840,886,932,975",
+                        "endColumns": "41,40,47,44,52,49,50,43,41,39,43,45,45,42,44",
+                        "endOffsets": "92,133,181,226,279,329,380,424,466,506,550,881,927,970,1015"
+                    }
+                }
+            ]
+        }
+    ]
+}

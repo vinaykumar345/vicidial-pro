@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vicidial Agent Console</title>
+  <link rel="stylesheet" href="/ui.css">
+</head>
+<body id="agentPage" class="crm-body">
+  <div class="crm-layout">
+    <aside class="crm-sidebar">
+      <div class="crm-logo">Vicidial <span>Agent</span></div>
+      <p class="crm-sub">Telecalling Workspace</p>
+
+      <nav class="crm-nav">
+        <a class="active" href="/agent.html">Agent Desk</a>
+        <a href="/admin.html">Supervisor Desk</a>
+        <a href="/">Portal Home</a>
+      </nav>
+
+      <div class="crm-kpis">
+        <div class="kpi-card">
+          <div class="kpi-label">Status</div>
+          <div class="kpi-value" id="kpiAgentState">Locked</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Campaigns</div>
+          <div class="kpi-value" id="kpiCampaignCount">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Last Action</div>
+          <div class="kpi-value kpi-small" id="kpiLastAction">None</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="crm-main">
+      <header class="crm-header">
+        <h1>Agent Calling Console</h1>
+        <div class="pill">Runo-inspired productivity layout</div>
+      </header>
+
+      <section class="crm-strip">
+        <div class="strip-tile">
+          <div class="strip-label">Queue Mode</div>
+          <div class="strip-value">Predictive</div>
+        </div>
+        <div class="strip-tile">
+          <div class="strip-label">Talk Window</div>
+          <div class="strip-value">09:00 - 21:00</div>
+        </div>
+        <div class="strip-tile">
+          <div class="strip-label">Disposition Bias</div>
+          <div class="strip-value">Follow-up Heavy</div>
+        </div>
+      </section>
+
+      <section class="card" id="agentGate">
+        <div class="card-h">
+          <h2>Unlock Workspace</h2>
+          <p>Authenticate with your Vicidial credentials to load campaigns and call controls.</p>
+        </div>
+        <div class="card-b">
+          <div class="row cols-3">
+            <div class="field">
+              <label for="gateAgentUser">Agent Username</label>
+              <input id="gateAgentUser" placeholder="e.g. 9885976256" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="gateAgentPass">Agent Password</label>
+              <input id="gateAgentPass" type="password" placeholder="Agent password" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="apiKey">API Key</label>
+              <input id="apiKey" value="change-me" autocomplete="off">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="unlockAgentBtn">Unlock Agent Console</button>
+            <button class="secondary" id="healthBtn">Check API Health</button>
+          </div>
+          <div id="agentStatus" class="status warn">Ready</div>
+          <div id="agentAudit" class="audit"></div>
+        </div>
+      </section>
+
+      <div class="grid two hidden" id="agentApp" style="margin-top:14px;">
+        <section class="card workspace-card">
+          <div class="card-h">
+            <h2>Agent Profile</h2>
+            <p>Authenticated identity and campaign assignment.</p>
+          </div>
+          <div class="card-b">
+            <div class="field">
+              <label>Authenticated Identity</label>
+              <input id="agentIdentity" disabled value="Not authenticated">
+            </div>
+            <div class="row cols-2" style="margin-top:10px;">
+              <div class="field">
+                <label for="agentUser">Agent User ID</label>
+                <input id="agentUser" placeholder="e.g. 9885976256" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="agentPass">Password</label>
+                <input id="agentPass" type="password" placeholder="Agent password" autocomplete="off">
+              </div>
+            </div>
+            <div class="field" style="margin-top:10px;">
+              <label for="campaign">Campaign</label>
+              <select id="campaign">
+                <option value="">Load campaigns first</option>
+              </select>
+            </div>
+            <div class="actions">
+              <button class="secondary" id="loadCampaignsBtn">Load Campaigns</button>
+              <button class="primary" id="loginBtn">Validate Login</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card workspace-card" id="agentActionCard">
+          <div class="card-h">
+            <h2>Dialer Panel</h2>
+            <p>Prepare number and trigger external dial in one flow.</p>
+          </div>
+          <div class="card-b">
+            <div class="row cols-2">
+              <div class="field">
+                <label for="dialNumber">Dial Number</label>
+                <input id="dialNumber" placeholder="e.g. 9885976256" autocomplete="off">
+              </div>
+              <div class="field">
+                <label>Route</label>
+                <input value="/api/external-dial" disabled>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="dark" id="dialBtn">Trigger External Dial</button>
+            </div>
+
+            <div class="lead-flow">
+              <div class="flow-title">Lead Progress</div>
+              <div class="flow-track">
+                <span class="flow-chip active">Fresh</span>
+                <span class="flow-chip">Connected</span>
+                <span class="flow-chip">Callback</span>
+                <span class="flow-chip">Converted</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card workspace-card span-two" id="leadBoardCard">
+          <div class="card-h">
+            <h2>Lead Workspace</h2>
+            <p>Queue-style lead view with contact timeline and disposition controls.</p>
+          </div>
+          <div class="card-b">
+            <div class="lead-board">
+              <div class="lead-list-wrap">
+                <div class="list-h">Lead Queue</div>
+                <div id="leadList" class="lead-list"></div>
+              </div>
+
+              <div class="lead-detail-wrap">
+                <div class="detail-top">
+                  <h3 id="leadName">Select a lead</h3>
+                  <div id="leadPhone" class="detail-phone">-</div>
+                </div>
+                <div id="leadMeta" class="detail-meta">No lead selected</div>
+
+                <div class="timeline-block">
+                  <div class="list-h">Contact Timeline</div>
+                  <div id="leadTimeline" class="timeline-list"></div>
+                </div>
+
+                <div class="disposition-block">
+                  <div class="list-h">Disposition Drawer</div>
+                  <div class="disposition-actions">
+                    <button type="button" class="secondary disp-btn" data-disp="Interested">Interested</button>
+                    <button type="button" class="secondary disp-btn" data-disp="Callback">Callback</button>
+                    <button type="button" class="secondary disp-btn" data-disp="Not Interested">Not Interested</button>
+                    <button type="button" class="secondary disp-btn" data-disp="Do Not Call">Do Not Call</button>
+                  </div>
+                  <div id="leadDispositionHint" class="help" style="margin-top:8px;">Select a lead to apply disposition.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="/ui.js"></script>
+</body>
+</html>

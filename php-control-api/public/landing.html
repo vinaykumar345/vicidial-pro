@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vicidial Control Portal</title>
+  <link rel="stylesheet" href="/ui.css">
+</head>
+<body id="landingPage">
+  <div class="shell">
+    <section class="hero">
+      <h1>Vicidial Control Portal</h1>
+      <p>
+        Unified operations workspace for agents and supervisors. Authenticate by role,
+        run call actions, and inspect live sessions without switching tools.
+      </p>
+      <div class="hero-links">
+        <a class="primary" href="/agent">Open Agent Console</a>
+        <a class="secondary" href="/admin">Open Admin Panel</a>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-box">
+          <div class="meta-label">Design Goal</div>
+          <div class="meta-value" id="landingGoal">Fast Call Operations</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Control API</div>
+          <div class="meta-value" id="landingApiHealth">Checking...</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Supervisor Tools</div>
+          <div class="meta-value" id="landingSupervisorTools">Monitor + Barge</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Last Refresh</div>
+          <div class="meta-value" id="landingRefresh">Waiting...</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <div class="card-h">
+        <h2>Quick Start</h2>
+        <p>Recommended entry paths based on user intent.</p>
+      </div>
+      <div class="card-b">
+        <div class="row cols-2">
+          <div class="field">
+            <label>Agent Workflow</label>
+            <textarea disabled>1) Open Agent Console
+2) Authenticate agent credentials
+3) Auto-load campaigns
+4) Validate login
+5) Trigger external dial</textarea>
+          </div>
+          <div class="field">
+            <label>Supervisor Workflow</label>
+            <textarea disabled>1) Open Admin Panel
+2) Authenticate admin credentials
+3) Discover live sessions
+4) Auto-fill session inputs
+5) Launch monitor or barge</textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="/ui.js"></script>
+</body>
+</html>

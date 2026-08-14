@@ -27,6 +27,12 @@ final class VicidialClient
         return $this->post($this->nonAgentUrl, $params + $this->baseParams());
     }
 
+    /** @param array<string, string> $params */
+    public function callAgentLogin(string $agentLoginUrl, array $params): array
+    {
+        return $this->post($agentLoginUrl, $params);
+    }
+
     /** @return array<string, string> */
     private function baseParams(): array
     {
@@ -65,6 +71,14 @@ final class VicidialClient
             return ['ok' => false, 'status' => $code, 'body' => $err !== '' ? $err : 'Unknown request error'];
         }
 
-        return ['ok' => $code >= 200 && $code < 300, 'status' => $code, 'body' => trim($body)];
+        $trimmedBody = trim($body);
+        $ok = $code >= 200 && $code < 300;
+        if (stripos($trimmedBody, 'ERROR:') === 0) {
+            $ok = false;
+        } elseif (stripos($trimmedBody, 'SUCCESS:') === 0) {
+            $ok = true;
+        }
+
+        return ['ok' => $ok, 'status' => $code, 'body' => $trimmedBody];
     }
 }

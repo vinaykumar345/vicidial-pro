@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.vicidial.simagent.app-mergeReleaseResources-35:/layout/activity_login.xml",
+        "source": "com.vicidial.simagent.app-main-37:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-mergeReleaseResources-35:/layout/activity_main.xml",
+        "source": "com.vicidial.simagent.app-main-37:/layout/activity_main.xml"
+    }
+]

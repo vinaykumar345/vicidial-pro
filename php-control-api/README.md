@@ -11,6 +11,12 @@ This service provides a modern PHP API layer in front of Vicidial AGC and non-ag
 ## Endpoints
 
 - `GET /health`
+- `POST /api/agent-campaigns`
+- `POST /api/agent-login`
+- `POST /api/agent-active-lead`
+- `POST /api/agent-action`
+- `POST /api/live-sessions`
+- `POST /api/ui-auth`
 - `POST /api/login-check`
 - `POST /api/external-dial`
 - `POST /api/monitor`
@@ -25,6 +31,8 @@ Send header:
 ## Environment
 
 Copy `.env.example` to `.env` and set values.
+
+Set `VICIDIAL_AGENT_LOGIN_URL` to your classic agent login URL, usually `https://your-domain/agc/vicidial.php`. If it is blank, the API infers it from `VICIDIAL_AGC_API_URL`.
 
 ## Local run
 

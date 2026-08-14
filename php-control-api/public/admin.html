@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vicidial Admin Panel</title>
+  <link rel="stylesheet" href="/ui.css">
+</head>
+<body id="adminPage" class="crm-body">
+  <div class="crm-layout">
+    <aside class="crm-sidebar">
+      <div class="crm-logo">Vicidial <span>Supervisor</span></div>
+      <p class="crm-sub">Quality & Intervention Desk</p>
+
+      <nav class="crm-nav">
+        <a href="/agent.html">Agent Desk</a>
+        <a class="active" href="/admin.html">Supervisor Desk</a>
+        <a href="/">Portal Home</a>
+      </nav>
+
+      <div class="crm-kpis">
+        <div class="kpi-card">
+          <div class="kpi-label">Status</div>
+          <div class="kpi-value" id="kpiAdminState">Locked</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Live Sessions</div>
+          <div class="kpi-value" id="kpiSessionCount">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Last Action</div>
+          <div class="kpi-value kpi-small" id="kpiAdminAction">None</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="crm-main">
+      <header class="crm-header">
+        <h1>Supervisor Monitor & Barge</h1>
+        <div class="pill">Operational controls inspired by telecalling CRMs</div>
+      </header>
+
+      <section class="crm-strip">
+        <div class="strip-tile">
+          <div class="strip-label">QA Focus</div>
+          <div class="strip-value">Objection Handling</div>
+        </div>
+        <div class="strip-tile">
+          <div class="strip-label">Escalation Queue</div>
+          <div class="strip-value">Priority Leads</div>
+        </div>
+        <div class="strip-tile">
+          <div class="strip-label">Coach Mode</div>
+          <div class="strip-value">Monitor + Barge</div>
+        </div>
+      </section>
+
+      <section class="card" id="adminGate">
+        <div class="card-h">
+          <h2>Unlock Supervisor Workspace</h2>
+          <p>Only users with Vicidial user_level 8+ can proceed.</p>
+        </div>
+        <div class="card-b">
+          <div class="row cols-3">
+            <div class="field">
+              <label for="gateAdminUser">Admin Username</label>
+              <input id="gateAdminUser" placeholder="Admin user" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="gateAdminPass">Admin Password</label>
+              <input id="gateAdminPass" type="password" placeholder="Admin password" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="adminApiKey">API Key</label>
+              <input id="adminApiKey" value="change-me" autocomplete="off">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="unlockAdminBtn">Unlock Admin Panel</button>
+            <button class="secondary" id="adminHealthBtn">Check API Health</button>
+          </div>
+          <div id="adminStatus" class="status warn">Ready</div>
+          <div id="adminAudit" class="audit"></div>
+        </div>
+      </section>
+
+      <div class="hidden" id="adminApp" style="margin-top:14px;">
+        <div class="grid two">
+          <section class="card workspace-card">
+            <div class="card-h">
+              <h2>Session Controls</h2>
+              <p>Selected agent session details for monitor/barge action.</p>
+            </div>
+            <div class="card-b">
+              <div class="field">
+                <label>Authenticated Identity</label>
+                <input id="adminIdentity" disabled value="Not authenticated">
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label for="phoneLogin">Phone Login</label>
+                <input id="phoneLogin" placeholder="e.g. 9885976256" autocomplete="off">
+              </div>
+              <div class="row cols-2" style="margin-top:10px;">
+                <div class="field">
+                  <label for="sessionId">Session ID (conf_exten)</label>
+                  <input id="sessionId" placeholder="e.g. 8600051" autocomplete="off">
+                </div>
+                <div class="field">
+                  <label for="serverIp">Server IP</label>
+                  <input id="serverIp" placeholder="e.g. 10.10.10.15" autocomplete="off">
+                </div>
+              </div>
+              <div class="actions">
+                <button class="secondary" id="monitorBtn">Launch Monitor</button>
+                <button class="dark" id="bargeBtn">Launch Barge</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="card workspace-card" id="sessionDiscoveryCard">
+            <div class="card-h">
+              <h2>Live Session Finder</h2>
+              <p>Directly query vicidial_live_agents and use a row in one click.</p>
+            </div>
+            <div class="card-b">
+              <div class="row cols-2">
+                <div class="field">
+                  <label for="sessionAgentFilter">Filter by Agent User</label>
+                  <input id="sessionAgentFilter" placeholder="optional" autocomplete="off">
+                </div>
+                <div class="field">
+                  <label>Action</label>
+                  <button class="secondary" id="discoverSessionsBtn" type="button">Discover Live Sessions</button>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Agent</th>
+                      <th>Name</th>
+                      <th>Campaign</th>
+                      <th>Status</th>
+                      <th>Session</th>
+                      <th>Server IP</th>
+                      <th>Last State</th>
+                      <th>Use</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sessionRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/ui.js"></script>
+</body>
+</html>

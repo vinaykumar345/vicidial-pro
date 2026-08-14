@@ -84,3 +84,50 @@ Backups are written to volume `vicidial_db_backups_prod`.
 - Vicidial is a legacy stack and requires legacy-compatible runtime behavior.
 - Telephony readiness depends on SIP trunk/carrier settings and Asterisk dialplan customization.
 - For production cutover validation, use `GO_LIVE_CHECKLIST.md`.
+
+## 8) Server quickstart (copy/paste)
+
+Clone and enter project:
+
+```bash
+git clone https://github.com/vinaykumar345/vicidial-pro.git
+cd vicidial-pro/vicidial-src
+```
+
+Create and edit production environment:
+
+```bash
+cp .env.production.example .env.production
+nano .env.production
+```
+
+Build and start all production services:
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+```
+
+Verify service status:
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.production ps
+```
+
+Watch logs:
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.production logs -f
+```
+
+Control API health check (requires API key header):
+
+```bash
+curl -sS -H "X-API-Key: change-me" http://127.0.0.1:8090/health
+```
+
+Restart stack:
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.production down
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+```

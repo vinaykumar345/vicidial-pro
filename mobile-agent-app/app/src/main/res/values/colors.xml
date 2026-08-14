@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#0B6E4F</color>
+    <color name="screen_bg">#EEF3F8</color>
+    <color name="surface_primary">#FFFFFF</color>
+    <color name="surface_stroke">#D7E1EC</color>
+
+    <color name="text_primary">#1E2A3A</color>
+    <color name="text_secondary">#526172</color>
+    <color name="text_hint">#7B8A9A</color>
+
+    <color name="action_primary">#0A6D92</color>
+    <color name="action_on_primary">#FFFFFF</color>
+    <color name="action_secondary">#D5E3EF</color>
+    <color name="action_on_secondary">#21303E</color>
+    <color name="action_dark">#21303E</color>
+    <color name="action_on_dark">#FFFFFF</color>
 </resources>

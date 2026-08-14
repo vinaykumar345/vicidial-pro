@@ -7,6 +7,15 @@ android {
     namespace = "com.vicidial.simagent"
     compileSdk = 35
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("/tmp/vicidial-release.jks")
+            storePassword = "vicidial123"
+            keyAlias = "vicidial"
+            keyPassword = "vicidial123"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.vicidial.simagent"
         minSdk = 26
@@ -23,10 +32,13 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "CONTROL_API_BASE_URL", "\"http://192.168.2.85:8090\"")
+            buildConfigField("String", "CONTROL_API_KEY", "\"change-me\"")
         }
     }
 

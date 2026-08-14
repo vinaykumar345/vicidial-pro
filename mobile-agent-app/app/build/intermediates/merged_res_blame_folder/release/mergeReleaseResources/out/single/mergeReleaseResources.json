@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "com.vicidial.simagent.app-release-36:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.vicidial.simagent.app-main-37:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-release-36:/drawable_bg_result.xml.flat",
+        "source": "com.vicidial.simagent.app-main-37:/drawable/bg_result.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-release-36:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.vicidial.simagent.app-main-37:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-release-36:/layout_activity_main.xml.flat",
+        "source": "com.vicidial.simagent.app-main-37:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-release-36:/drawable_bg_input.xml.flat",
+        "source": "com.vicidial.simagent.app-main-37:/drawable/bg_input.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-release-36:/layout_activity_login.xml.flat",
+        "source": "com.vicidial.simagent.app-main-37:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.vicidial.simagent.app-release-36:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.vicidial.simagent.app-main-37:/drawable/ic_launcher_foreground.xml"
+    }
+]
